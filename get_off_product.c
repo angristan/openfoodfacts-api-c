@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 
     product = json_object_get(json_document, "product");
     if(!json_is_object(product)) {
-        fprintf(stderr, "eroor: product is not an object\n");
+        fprintf(stderr, "error: product is not an object\n");
         return 1;
     }
 
