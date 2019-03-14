@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: debian/stretch-slim
+      - image: debian:stretch-slim
     steps:
       - checkout
       - run: apt-get update 
