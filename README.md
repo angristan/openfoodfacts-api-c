@@ -23,6 +23,17 @@ Product name: Stir-Fry Rice Noodles
 Product image: https://static.openfoodfacts.org/images/products/073/762/806/4502/front_en.6.400.jpg
 ```
 
+### Docker
+
+You can run the program in Docker with the provided Dockerfile:
+
+```sh
+$ docker build -t openfoodfact-api-c .
+$ docker run --rm openfoodfact-api-c 737628064502
+Product name: Stir-Fry Rice Noodles
+Product image: https://static.openfoodfacts.org/images/products/073/762/806/4502/front_en.6.400.jpg
+```
+
 ## License
 
 MIT
