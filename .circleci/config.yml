@@ -1,0 +1,10 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:stretch-slim
+    steps:
+      - checkout
+      - run: apt-get update 
+      - run: apt-get install -y build-essential libjansson-dev libcurl4-gnutls-dev
+      - run: make
