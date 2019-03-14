@@ -28,7 +28,7 @@ static size_t write_response(void *buffer, size_t size, size_t nmemb, void *stre
     struct write_result *result = (struct write_result *)stream;
 
     // Final result should be <= RESULT_SIZE
-    if(result->pos + size * nmemb >= RESULT_SIZE - 1) {
+    if (result->pos + size * nmemb >= RESULT_SIZE - 1) {
         fprintf(stderr, "error: too small buffer\n");
         return 0;
     }
@@ -54,12 +54,12 @@ static char *request(const char *url) {
 
     curl_global_init(CURL_GLOBAL_ALL);
     curl = curl_easy_init();
-    if(!curl)
+    if (!curl)
         goto error;
 
     // Final result has to be <= RESULT_SIZE
     data = malloc(RESULT_SIZE);
-    if(!data)
+    if (!data)
         goto error;
 
     // Struct used to build the final result (`data`)
@@ -75,7 +75,7 @@ static char *request(const char *url) {
 
     // Make HTTP request
     status = curl_easy_perform(curl);
-    if(status != 0) {
+    if (status != 0) {
         fprintf(stderr, "error: unable to request data from %s:\n", url);
         fprintf(stderr, "%s\n", curl_easy_strerror(status));
         goto error;
@@ -83,7 +83,7 @@ static char *request(const char *url) {
 
     // Check HTTP response code
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
-    if(code != 200) {
+    if (code != 200) {
         fprintf(stderr, "error: server responded with code %ld\n", code);
         goto error;
     }
@@ -100,9 +100,9 @@ static char *request(const char *url) {
 
 error:
     // Clean memory
-    if(data)
+    if (data)
         free(data);
-    if(curl)
+    if (curl)
         curl_easy_cleanup(curl);
     curl_global_cleanup();
     return NULL;
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     json_t *json_document;
     json_error_t error;
 
-    if(argc != 2) {
+    if (argc != 2) {
         fprintf(stderr, "usage: %s <product id>\n\n", argv[0]);
         return 2;
     }
@@ -126,19 +126,19 @@ int main(int argc, char *argv[])
 
     // Get JSON from API with CURL
     http_document = request(url);
-    if(!http_document)
+    if (!http_document)
         return 1;
 
     json_document = json_loads(http_document, 0, &error);
     free(http_document);
 
-    if(!json_document) {
+    if (!json_document) {
         fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
         return 1;
     }
 
     // Open Food Facts returns a JSON object 
-    if(!json_is_object(json_document)) {
+    if (!json_is_object(json_document)) {
         fprintf(stderr, "error: json_document is not an oject (JSON type error)\n");
         json_decref(json_document);
         return 1;
@@ -152,25 +152,25 @@ int main(int argc, char *argv[])
     // Check status property of the json_document
     json_unpack(json_document, "{s:i}", "status", &product_status);
     // 1 is found, 0 is not found
-    if(product_status != 1) {
+    if (product_status != 1) {
         fprintf(stderr, "error: product not found.\n");
         return 1;
     }
 
     // Get product properties
     product = json_object_get(json_document, "product");
-    if(!json_is_object(product)) {
+    if (!json_is_object(product)) {
         fprintf(stderr, "error: product is not an object\n");
         return 1;
     }
 
     json_unpack(product, "{s:s}", "product_name", &product_name);
-    if(!product_name) {
+    if (!product_name) {
         fprintf(stderr, "error: product.product_name was not found\n");
         return 1;
     }
     json_unpack(product, "{s:s}", "image_url", &product_image_url);
-    if(!product_image_url) {
+    if (!product_image_url) {
         fprintf(stderr, "error: product.product_image_url was not found\n");
         return 1;
     }
