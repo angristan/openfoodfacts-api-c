@@ -145,8 +145,9 @@ int main(int argc, char *argv[])
     }
 
     // We'll extract these value from json_document
+    json_t *product;
     int product_status;
-    json_t *product, *product_name, *product_image_url;
+    char *product_name, *product_image_url = NULL;
 
     // Check status property of the json_document
     json_unpack(json_document, "{s:i}", "status", &product_status);
@@ -156,26 +157,26 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // Get product properties
     product = json_object_get(json_document, "product");
     if(!json_is_object(product)) {
         fprintf(stderr, "error: product is not an object\n");
         return 1;
     }
 
-    product_name = json_object_get(product, "product_name");
-    if(!json_is_string(product_name)) {
-        fprintf(stderr, "error: product.product_name is not a string\n");
+    json_unpack(product, "{s:s}", "product_name", &product_name);
+    if(!product_name) {
+        fprintf(stderr, "error: product.product_name was not found\n");
+        return 1;
+    }
+    json_unpack(product, "{s:s}", "image_url", &product_image_url);
+    if(!product_image_url) {
+        fprintf(stderr, "error: product.product_image_url was not found\n");
         return 1;
     }
 
-    product_image_url = json_object_get(product, "image_url");
-    if(!json_is_string(product_image_url)) {
-        fprintf(stderr, "error: product.product_image_url is not a string\n");
-        return 1;
-    }
-
-    printf("Product name: %s\n", json_string_value(product_name));
-    printf("Product image: %s\n", json_string_value(product_image_url));
+    printf("Product name: %s\n", product_name);
+    printf("Product image: %s\n", product_image_url);
 
     // Free json_document
     json_decref(json_document);
