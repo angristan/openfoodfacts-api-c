@@ -1,5 +1,8 @@
 # Open Food Facts API request in C
 
+[![CircleCI](https://circleci.com/gh/angristan/openfoodfact-api-c.svg?style=svg)](https://circleci.com/gh/angristan/openfoodfact-api-c)
+
+
 Simple program to get product information from the Open Food Facts API.
 
 ## Dependencies
